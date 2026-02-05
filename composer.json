@@ -1,0 +1,22 @@
+{
+    "name": "neograph734/picwall-php",
+    "description": "Image collage builder that uses a tree node structure for the image placement.",
+    "keywords": ["image", "collage", "tree"],
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "PicWall\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "PicWall\\Test\\": "test/" }
+    },
+    "require": {
+        "php": "^8.0",
+        "ext-gd": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0"
+    }
+}
