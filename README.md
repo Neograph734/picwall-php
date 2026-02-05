@@ -83,5 +83,10 @@ If you want to display the collage on a webpage without generating a flat JPEG, 
     echo $generator->renderToHTML($layout);
 Note: The HTML output uses absolute positioning relative to the container and object-fit: contain to preserve the layout integrity.
 
+## 🎓 Credits & Algorithm
+This library is a PHP implementation inspired by the research paper:
+
+[PicWall: A content-aware image collage generator](https://ieeexplore.ieee.org/document/6694305) > Zhipeng Wu and Kiyoharu Aizawa > Presented at APSIPA (Asia-Pacific Signal and Information Processing Association), 2013.
+
 ## 📄 License
 MIT License. See LICENSE for details.
