@@ -9,7 +9,7 @@ use InvalidArgumentException;
  *
  * Holds tunable constants for rendering and layout optimization.
  */
-class CollageConfig
+class CollageConfig implements CollageConfigInterface
 {
   /** @var int Default number of layout optimization attempts */
   public int $attempts = 40;
@@ -71,4 +71,10 @@ class CollageConfig
       throw new InvalidArgumentException('padding must be non-negative');
     }
   }
+
+  public function getAttempts(): int { return $this->attempts; }
+  public function getPadding(): int { return $this->padding; }
+  public function getJpegQuality(): int { return $this->jpegQuality; }
+
+  // validate() already satisfies the interface
 }

@@ -16,7 +16,7 @@ class CollageGenerator {
   private int $padding;
   private int $jpegQuality;
   private float $targetAspectRatio;
-  private CollageConfig $config;
+  private CollageConfigInterface $config;
 
   /**
    * Creates a new CollageGenerator instance.
@@ -24,9 +24,9 @@ class CollageGenerator {
    * @param int $width Canvas width in pixels
    * @param int $height Canvas height in pixels
    * @param int $padding Padding between images in pixels (default: 0)
-   * @param CollageConfig|null $config Optional configuration object
+   * @param CollageConfigInterface|null $config Optional configuration object
    */
-  public function __construct(int $width, int $height, int $padding = 0, ?CollageConfig $config = null)
+  public function __construct(int $width, int $height, int $padding = 0, ?CollageConfigInterface $config = null)
   {
     $this->canvasWidth = $width;
     $this->canvasHeight = $height;
@@ -88,10 +88,10 @@ class CollageGenerator {
   /**
    * Recursively pairs images to build a binary tree.
    */
-  private function buildRandomTree(array $nodes): Node
+  private function buildRandomTree(array $nodes): NodeInterface
   {
     // Convert raw images to Leaf Nodes on first pass
-    if ($nodes[0] instanceof CollageImage) {
+    if ($nodes[0] instanceof CollageImageInterface) {
       $nodes = array_map(fn($img) => new Node($img), $nodes);
     }
 
@@ -120,7 +120,7 @@ class CollageGenerator {
    * Horizontal (Side-by-Side): AR adds up.
    * Vertical (Stacked): 1/AR adds up (harmonic-ish).
    */
-  private function updateAspectRatio(Node $node): void
+  private function updateAspectRatio(NodeInterface $node): void
   {
     if (!$node->left || !$node->right) return;
 
@@ -137,7 +137,7 @@ class CollageGenerator {
   /**
    * "Smart Adjustment": Recursively flips splits if it helps match the target.
    */
-  private function optimizeAspectRatio(Node $node): void
+  private function optimizeAspectRatio(NodeInterface $node): void
   {
     if (!$node->left || !$node->right) return;
 
@@ -167,7 +167,7 @@ class CollageGenerator {
   /**
    * Assigns pixel dimensions top-down based on aspect ratios.
    */
-  private function calculateCoordinates(Node $node, float $x, float $y, float $w, float $h): void
+  private function calculateCoordinates(NodeInterface $node, float $x, float $y, float $w, float $h): void
   {
     $node->x = $x; $node->y = $y; $node->width = $w; $node->height = $h;
 
@@ -197,7 +197,7 @@ class CollageGenerator {
   /**
    * The "Force Shrink": Scales the entire layout to fit inside the canvas.
    */
-  private function fitToBounds(Node $root): void
+  private function fitToBounds(NodeInterface $root): void
   {
     // 1. How big is the layout naturally?
     // (We initially set width = canvasWidth, so currentW is canvasWidth)
@@ -220,7 +220,7 @@ class CollageGenerator {
     $this->applyScaleRecursively($root, $finalScale, $offsetX, $offsetY);
   }
 
-  private function applyScaleRecursively(Node $node, float $scale, float $offX, float $offY): void
+  private function applyScaleRecursively(NodeInterface $node, float $scale, float $offX, float $offY): void
   {
     $node->x = ($node->x * $scale) + $offX;
     $node->y = ($node->y * $scale) + $offY;
@@ -231,7 +231,17 @@ class CollageGenerator {
     if ($node->right) $this->applyScaleRecursively($node->right, $scale, $offX, $offY);
   }
 
-  private function flattenTree(Node $node): array
+  /**
+   * Flattens a binary tree into a flat array of leaf nodes that all contain
+   * an image.
+   *
+   * @param \PicWall\NodeInterface $node
+   *   The root node of the tree to flatten.
+   *
+   * @return \PicWall\NodeInterface[]
+   *   An array of leaf nodes that all contain an image.
+   */
+  private function flattenTree(NodeInterface $node): array
   {
     if ($node->image) return [$node];
     return array_merge(
@@ -246,7 +256,7 @@ class CollageGenerator {
    * Generates HTML with percentage-based positioning for responsive scaling.
    * Optionally overlays debug information showing aspect ratios and weights.
    *
-   * @param Node[] $layout Array of positioned nodes to render
+   * @param NodeInterface[] $layout Array of positioned nodes to render
    * @param bool $debug Whether to show debug overlay (default: false)
    * @return string The complete HTML markup for the collage.
    */
@@ -292,7 +302,7 @@ class CollageGenerator {
    * Creates a rasterized image with center-cropped photos fitted into their
    * assigned rectangular areas.
    *
-   * @param Node[] $layout Array of positioned nodes to render
+   * @param NodeInterface[] $layout Array of positioned nodes to render
    * @param string $outputPath File path where the JPEG will be saved
    * @return void
    */

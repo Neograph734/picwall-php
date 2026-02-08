@@ -8,7 +8,7 @@ namespace PicWall;
  * This class encapsulates all metadata needed for a single image in the collage,
  * including its path, dimensions, weight (importance), and calculated aspect ratio.
  */
-class CollageImage
+class CollageImage implements CollageImageInterface
 {
   /** @var string The file path or URL of the image */
   public string $path;
@@ -41,4 +41,10 @@ class CollageImage
     $this->weight = $weight;
     $this->aspectRatio = ($height > 0) ? $width / $height : 1.0;
   }
+
+  public function getPath(): string { return $this->path; }
+  public function getWidth(): int { return $this->width; }
+  public function getHeight(): int { return $this->height; }
+  public function getWeight(): float { return $this->weight; }
+  public function getAspectRatio(): float { return $this->aspectRatio; }
 }
