@@ -253,6 +253,27 @@ class CollageGenerator {
   }
 
   /**
+   * Returns the raw layout data without rendering.
+   *
+   * The returned array contains canvas dimensions and the flattened node tree.
+   * Each node carries its computed geometry (x, y, width, height) and the
+   * associated CollageImageInterface, giving external renderers all the
+   * information they need to produce output in any format.
+   *
+   * @param NodeInterface[] $layout Array of positioned leaf nodes (from generateBestLayout)
+   * @return array{canvasWidth: int, canvasHeight: int, padding: int, nodes: NodeInterface[]}
+   */
+  public function getLayoutData(array $layout): array
+  {
+    return [
+      'canvasWidth' => $this->canvasWidth,
+      'canvasHeight' => $this->canvasHeight,
+      'padding' => $this->padding,
+      'nodes' => $layout,
+    ];
+  }
+
+  /**
    * Renders the layout into a responsive HTML structure.
    *
    * Generates HTML with percentage-based positioning for responsive scaling.
