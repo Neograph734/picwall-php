@@ -14,7 +14,7 @@ use InvalidArgumentException;
 class CollageConfig implements CollageConfigInterface
 {
   /** @var int Default number of layout optimization attempts */
-  public int $attempts = 40;
+  public int $attempts = 50;
 
   /** @var int Default padding between images in pixels */
   public int $padding = 0;

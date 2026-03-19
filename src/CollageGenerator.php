@@ -25,28 +25,26 @@ class CollageGenerator {
    *
    * @param int $width Canvas width in pixels
    * @param int $height Canvas height in pixels
-   * @param int $padding Padding between images in pixels (default: 0)
    * @param CollageConfigInterface|null $config Optional configuration object
    */
-  public function __construct(int $width, int $height, int $padding = 0, ?CollageConfigInterface $config = null)
+  public function __construct(int $width, int $height, ?CollageConfigInterface $config = null)
   {
     $this->canvasWidth = $width;
     $this->canvasHeight = $height;
     $this->config = $config ?? new CollageConfig();
     
-    // Allow constructor padding to override config if explicitly provided
-    $this->padding = $padding !== 0 ? $padding : $this->config->padding;
+    $this->padding = $this->config->padding;
     $this->jpegQuality = $this->config->jpegQuality;
     
     // The ideal shape we are trying to mimic
     $this->targetAspectRatio = $width / $height;
   }
 
-  public function generateBestLayout(array $images, int $attempts = 50): array {
+  public function generateBestLayout(array $images, ?int $attempts = null): array {
     if (empty($images)) return [];
 
-    // Use config attempts if the parameter uses default value
-    $effectiveAttempts = $attempts !== 50 ? $attempts : $this->config->attempts;
+    // Use config attempts if the parameter was not defined.
+    $effectiveAttempts = $attempts ?? $this->config->attempts;
 
     $bestRoot = null;
     $bestScore = PHP_FLOAT_MAX;
